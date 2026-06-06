@@ -1,0 +1,3 @@
+project/.venv/
+project/game_state.jsonl
+project/__pycache__
