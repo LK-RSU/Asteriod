@@ -10,7 +10,11 @@ def main():
     dt = 0
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
     player = Player(x, y)
+
     running = True
 
     while running:
@@ -21,15 +25,14 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
     # fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
-
-    # RENDER YOUR GAME HERE
-        player.draw(screen)
+    # UPDATE YOUR GAME HERE & RENDER YOUR GAME HERE
+        updatable.update(dt)
+        for thing in drawable:
+            thing.draw(screen)
     # flip() the display to put your work on screen
         pygame.display.flip()
-
     pygame.quit()
 
 
