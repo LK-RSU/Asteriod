@@ -6,6 +6,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from logger import log_event
+from shot import Shot
 
 
 def main():
@@ -18,9 +19,11 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
     player = Player(x, y)
     Asteroid.containers = (asteroids, updatable, drawable)
+    Shot.containers = (shots, updatable, drawable)
     # AsteroidField only needs to update to run its spawning timer
     AsteroidField.containers = updatable
     asteroid_field = AsteroidField()
@@ -42,6 +45,17 @@ def main():
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit(0)
+        for shot in shots:
+            for asteroid in asteroids:
+                if shot.collides_with(asteroid):
+                    log_event("asteroid_shot")
+                    shot.kill()
+                    # spawn fragments before removing the asteroid
+                    try:
+                        asteroid.kill()
+                    except Exception:
+                        pass
+                    asteroid.split()
     # fill the screen with a color to wipe away anything from last frame
         screen.fill("black")
         for obj in drawable:
